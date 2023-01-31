@@ -3,8 +3,8 @@ green='\033[0;32m'
 red='\033[0;31m'
 nocolor='\033[0m'
 deps="meson ninja patchelf unzip curl pip flex bison zip"
-workdir="$(pwd)/turnip_workdir2"
-magiskdir="$workdir/turnip_module2"
+workdir="$(pwd)/turnip_workdir_dbg"
+magiskdir="$workdir/turnip_module_dbg"
 clear
 
 

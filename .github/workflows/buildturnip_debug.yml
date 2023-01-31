@@ -26,6 +26,6 @@ jobs:
         tag_name: workflow_${{github.run_number}}
         name: Release ${{github.run_number}}
         files: |
-           turnip_workdir2/turnipXiaomiPocoModdebug.zip
-#          turnip_workdir2/meson_log
-#          turnip_workdir2/ninja_log
+           turnip_workdir_dbg/turnipXiaomiPocoModdebug.zip
+#          turnip_workdir_dbg/meson_log
+#          turnip_workdir_dbg/ninja_log
