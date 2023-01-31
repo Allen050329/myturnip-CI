@@ -2,9 +2,11 @@
 green='\033[0;32m'
 red='\033[0;31m'
 nocolor='\033[0m'
-deps="meson ninja patchelf unzip curl pip flex bison zip"
-workdir="$(pwd)/panfrostmali.zip"
-magiskdir="$workdir/panfrost_mali"
+deps="meson ninja patchelf unzip git curl pip flex bison zip"
+workdir="$(pwd)/panfrostmali"
+magiskdir="$workdir/magisk_panfrost_mali"
+andk="android-ndk-r25b"
+set -e
 clear
 
 
@@ -29,33 +31,32 @@ for deps_chk in $deps;
 
 echo "Installing python Mako dependency (if missing) ..." $'\n'
 pip install mako &> /dev/null
-apt-get install libdrm-dev
 
+if [ ! -d $workdir ]; then
+	echo "Creating and entering to work directory ..." $'\n'
+	mkdir -p $workdir && cd $workdir
+fi
 
-echo "Creating and entering to work directory ..." $'\n'
-mkdir -p $workdir && cd $workdir
+if [ ! -d "$andk" ]; then
+	echo "Downloading android-ndk from google server ..." $'\n'
+	curl https://dl.google.com/android/repository/$andk-linux.zip --output $andk-linux.zip &> /dev/null
+	###
+	echo "Exracting android-ndk to a folder ..." $'\n'
+	unzip $andk-linux.zip  &> /dev/null
+fi
 
+if [ ! -d mesa ]; then
+	echo "Downloading mesa source ..." $'\n'
+	git clone https://gitlab.freedesktop.org/mesa/mesa.git
+	###
+fi
 
-
-echo "Downloading android-ndk from google server (~506 MB) ..." $'\n'
-curl https://dl.google.com/android/repository/android-ndk-r25b-linux.zip --output android-ndk-r25b-linux.zip &> /dev/null
-###
-echo "Exracting android-ndk to a folder ..." $'\n'
-unzip android-ndk-r25b-linux.zip  &> /dev/null
-
-
-
-echo "Downloading mesa source (~30 MB) ..." $'\n'
-curl https://gitlab.freedesktop.org/mesa/mesa/-/archive/main/mesa-main.zip --output mesa-main.zip &> /dev/null
-###
-echo "Exracting mesa source to a folder ..." $'\n'
-unzip mesa-main.zip &> /dev/null
-cd mesa-main
+cd mesa
 
 
 
 echo "Creating meson cross file ..." $'\n'
-ndk="$workdir/android-ndk-r25b/toolchains/llvm/prebuilt/linux-x86_64/bin"
+ndk="$workdir/$andk/toolchains/llvm/prebuilt/linux-x86_64/bin"
 cat <<EOF >"android-aarch64"
 [binaries]
 ar = '$ndk/llvm-ar'
@@ -63,10 +64,11 @@ c = ['ccache', '$ndk/aarch64-linux-android31-clang']
 cpp = ['ccache', '$ndk/aarch64-linux-android31-clang++', '-fno-exceptions', '-fno-unwind-tables', '-fno-asynchronous-unwind-tables', '-static-libstdc++']
 c_ld = 'lld'
 cpp_ld = 'lld'
+llvm-config = 'llvm-config'
 strip = '$ndk/aarch64-linux-android-strip'
-pkgconfig = ['env', 'PKG_CONFIG_LIBDIR=/usr/lib/pkgconfig', '/usr/bin/pkg-config']
+pkgconfig = ['env', 'PKG_CONFIG_LIBDIR=$workdir/$andk/pkgconfig', '/usr/bin/pkg-config']
 [host_machine]
-system = 'android'
+system = 'linux'
 cpu_family = 'aarch64'
 cpu = 'armv8'
 endian = 'little'
@@ -75,17 +77,26 @@ EOF
 
 
 echo "Generating build files ..." $'\n'
-meson build-android-aarch64 --cross-file $workdir/mesa-main/android-aarch64 -Dbuildtype=debug -Dplatforms=android -Dplatform-sdk-version=31 -Dandroid-stub=true -Dgallium-drivers= -Dvulkan-drivers=panfrost -Db_lto=true
+meson build-android-aarch64 --cross-file \
+        $workdir/mesa/android-aarch64  -Dgallium-drivers= \
+		-Dfreedreno-kgsl=true -Ddri3=enabled -Dvulkan-drivers=panfrost \
+        -Dvulkan-layers=device-select,overlay -Degl=enabled -Dgallium-va=enabled \
+        -Dgallium-nine=true -Dgallium-opencl=icd -Dbuildtype=release \
+        -Dplatform-sdk-version=31 -Dandroid-stub=true -Dshader-cache=enabled \
+        -Dshader-cache-default=true -Db_lto=true -Dplatforms=android \
+        -Dvideo-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc -Dshared-glapi=enabled \
+        -Dglx=disabled -Dgles2=enabled -Dgles1=enabled -Dllvm=enabled &> $workdir/meson_log_mali.log
 
 
 
 echo "Compiling build files ..." $'\n'
-ninja -C build-android-aarch64
+ninja -C build-android-aarch64 &> $workdir/ninja_log_mali.log
 
 
 
 #echo "Using patchelf to match soname ..."  $'\n'
-cp $workdir/mesa-main/build-android-aarch64/src/freedreno/vulkan/libvulkan_freedreno.so $workdir
+sleep 600
+cp $workdir/mesa/build-android-aarch64/src/freedreno/vulkan/libvulkan_freedreno.so $workdir
 cd $workdir
 #patchelf --set-soname vulkan.adreno.so libvulkan_freedreno.so
 #mv libvulkan_freedreno.so vulkan.adreno.so
