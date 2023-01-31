@@ -13,7 +13,8 @@ In this repository, you will find a shell script to build freedreno/turnip drive
 
 
 ###Allen050329 Changelog
--change auto build time to the 1st, 8th, 15th and 22nd of each month
+-Change auto build time to the 1st, 8th, 15th and 22nd of each month
+-Add drm stuff back in
 
 Notes
 use command 

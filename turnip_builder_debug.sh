@@ -43,7 +43,9 @@ curl https://dl.google.com/android/repository/android-ndk-r25b-linux.zip --outpu
 echo "Exracting android-ndk to a folder ..." $'\n'
 unzip android-ndk-r25b-linux.zip  &> /dev/null
 
-
+echo "Downloading libdrm-dev"
+apt-get install libdrm-dev
+###
 
 echo "Downloading mesa source (~30 MB) ..." $'\n'
 curl https://gitlab.freedesktop.org/mesa/mesa/-/archive/main/mesa-main.zip --output mesa-main.zip &> /dev/null
