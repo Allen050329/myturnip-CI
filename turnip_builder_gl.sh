@@ -130,9 +130,7 @@ fi
 
 echo "Prepare magisk module structure ..." $'\n'
 p1="system/vendor/lib64/egl"
-p2="system/vendor/lib/egl"
 mkdir -p $magiskdir/$p1
-mkdir -p $magiskdir/$p2
 cd $magiskdir
 
 
@@ -188,22 +186,16 @@ EOF
 
 cat <<EOF >"customize.sh"
 set_perm \$MODPATH/$p1/libEGL_adreno.so 0 0 0644
-set_perm \$MODPATH/$p2/libEGL_adreno.so 0 0 0644
 set_perm \$MODPATH/$p1/libGLESv1_CM_adreno.so 0 0 0644
-set_perm \$MODPATH/$p2/libGLESv1_CM_adreno.so 0 0 0644
 set_perm \$MODPATH/$p1/libGLESv2_adreno.so 0 0 0644
-set_perm \$MODPATH/$p2/libGLESv2_adreno.so 0 0 0644
 EOF
 
 
 
 echo "Copy necessary files from work directory ..." $'\n'
 cp $workdir/libEGL_adreno.so $magiskdir/$p1
-cp $workdir/libEGL_adreno.so $magiskdir/$p2
 cp $workdir/libGLESv1_CM_adreno.so $magiskdir/$p1
-cp $workdir/libGLESv1_CM_adreno.so $magiskdir/$p2
 cp $workdir/libGLESv2_adreno.so $magiskdir/$p1
-cp $workdir/libGLESv2_adreno.so $magiskdir/$p2
 
 
 
