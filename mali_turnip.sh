@@ -66,9 +66,6 @@ cd mesa
 
 
 echo "Creating meson cross file ..." $'\n'
-for i in $workdir/$andk/pkgconfig/*.pc ; do
-	sed -i "s/pwd/$workdir" $i
-done
 ndk="$workdir/$andk/toolchains/llvm/prebuilt/linux-x86_64/bin"
 LD_LIBRARY_PATH="$ndk/:$workdir/:$LD_LIBRARY_PATH"
 LOCAL_C_INCLUDES="$LD_LIBRARY_PATH"
@@ -112,9 +109,7 @@ cp $workdir/mesa/build-android-aarch64/src/panfrost/vulkan/libvulkan_panfrost.so
 cd $workdir
 #patchelf --set-soname vulkan.adreno.so libvulkan_panfrost.so
 #mv libvulkan_panfrost.so vulkan.adreno.so
-for i in $workdir/$andk/pkgconfig/*.pc ; do
-	sed -i "s/$workdir/pwd" $i
-done
+
 
 
 if ! [ -a libvulkan_panfrost.so ]; then
