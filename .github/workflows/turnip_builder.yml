@@ -3,7 +3,7 @@ name: Build turnip
 on:
   workflow_dispatch:
   schedule:
-  - cron: "0 12 1,8,15,22 * * *"
+  - cron: "0 13 1,8,15,22 * * *"
 
 jobs:
   build_turnip:
@@ -19,8 +19,9 @@ jobs:
         sudo pip install meson
     
     - name: Run build scripts
-      run: bash ./turnip_builder.sh
-      run: bash ./turnip_builder_gl.sh 
+      run: |
+        bash ./turnip_builder.sh
+        bash ./turnip_builder_gl.sh 
       
     - name: Release Mesa Turnip Latest
       uses: softprops/action-gh-release@v1
