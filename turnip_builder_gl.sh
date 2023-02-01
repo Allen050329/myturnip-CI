@@ -48,7 +48,8 @@ if [ ! -d "$andk/toolchains" ]; then
 	curl https://dl.google.com/android/repository/$andk-$ndkrev-linux.zip --output $andk-linux.zip &> /dev/null
 	###
 	echo "Exracting android-ndk to a folder ..." $'\n'
-	unzip $andk-linux.zip  &> /dev/null
+	unzip $andk-linux.zip -d $andk &> /dev/null
+	rm -rf $andk-linux.zip
 else
 	echo  "NDK $andk exists!" $'\n'
 fi
