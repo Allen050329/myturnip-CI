@@ -1,4 +1,4 @@
-prefix=/home/allen623329/myturnip-CI/panfrostmali/android-ndk/deps
+prefix=pwd/android-ndk/deps
 exec_prefix=${prefix}/libxml2
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include

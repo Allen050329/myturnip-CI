@@ -1,4 +1,4 @@
-prefix=/home/allen623329/myturnip-CI/turnip_workdir/android-ndk/deps
+prefix=pwd/android-ndk/deps
 exec_prefix=${prefix}/libconfig
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include

@@ -1,7 +1,7 @@
 V=5.4
 R=5.4.4
 
-prefix=/home/allen623329/myturnip-CI/panfrostmali/android-ndk/deps
+prefix=pwd/android-ndk/deps
 exec_prefix=${prefix}/lua
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include

@@ -1,4 +1,4 @@
-prefix=/home/allen623329/myturnip-CI/panfrostmali/android-ndk/deps
+prefix=pwd/android-ndk/deps
 includedir=${prefix}/libclc/include
 libexecdir=${prefix}/libclc/share/clc
 

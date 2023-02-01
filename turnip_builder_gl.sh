@@ -68,6 +68,9 @@ cd mesa
 
 
 echo "Creating meson cross file ..." $'\n'
+for i in $workdir/$andk/pkgconfig/*.pc ; do
+	sed -i "s/pwd/$workdir" $i
+done
 ndk="$workdir/$andk/toolchains/llvm/prebuilt/linux-x86_64/bin"
 LD_LIBRARY_PATH="$ndk/:$workdir/:$LD_LIBRARY_PATH"
 LOCAL_C_INCLUDES="$LD_LIBRARY_PATH"
@@ -114,7 +117,9 @@ for i in ./*.so; do
 	patchelf --set-soname ${i%.*}_adreno.so $i
 	mv $i ${i%.*}_adreno.so
 done
-
+for i in $workdir/$andk/pkgconfig/*.pc ; do
+	sed -i "s/$workdir/pwd" $i
+done
 
 if ! [ -a libEGL_adreno.so ]; then
 	echo -e "$red Build failed! $nocolor" && exit 1
