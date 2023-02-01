@@ -30,7 +30,7 @@ for deps_chk in $deps;
 
 
 echo "Installing python Mako dependency (if missing) ..." $'\n'
-pip install mako &> /dev/null
+pip install mako 
 
 
 
@@ -45,10 +45,11 @@ cd $workdir
 
 if [ ! -d "$andk/toolchains" ]; then
 	echo "Downloading android-ndk from google server ..." $'\n'
-	curl https://dl.google.com/android/repository/$andk-$ndkrev-linux.zip --output $andk-linux.zip &> /dev/null
+	curl https://dl.google.com/android/repository/$andk-$ndkrev-linux.zip --output $andk-linux.zip 
 	###
 	echo "Exracting android-ndk to a folder ..." $'\n'
-	unzip $andk-linux.zip -d $andk &> /dev/null
+	unzip $andk-linux.zip &> /dev/null
+	cp -a $andk-$ndkrev $andk
 	rm -rf $andk-linux.zip
 else
 	echo  "NDK $andk exists!" $'\n'
@@ -97,12 +98,12 @@ meson build-android-aarch64 --cross-file $workdir/mesa/android-aarch64 -Dgallium
        -Dplatform-sdk-version=31 -Dandroid-stub=true -Dshader-cache=enabled -Dplatforms=android -Dvulkan-drivers= \
        -Dshader-cache-default=true -Db_lto=true -Dcpp_rtti=false -Dvideo-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc \
 	   -Dshared-glapi=enabled -Dgles2=enabled -Dgles1=enabled -Dllvm=enabled -Ddraw-use-llvm=false \
-	   -Ddri-search-path=$workdir/mesa/src/egl/drivers/dri2 &> $workdir/meson_log_dreno.log
+	   -Ddri-search-path=$workdir/mesa/src/egl/drivers/dri2 2>&1 | tee $workdir/meson_log_dreno.log
 
 
 
 echo "Compiling build files ..." $'\n'
-ninja -C build-android-aarch64 &> $workdir/ninja_log_dreno.log
+ninja -C build-android-aarch64 2>&1 | tee $workdir/ninja_log_dreno.log
 
 echo "Using patchelf to match soname ..."  $'\n'
 cp $workdir/mesa/build-android-aarch64/src/egl/libEGL.so $workdir

@@ -30,7 +30,7 @@ for deps_chk in $deps;
 
 
 echo "Installing python Mako dependency (if missing) ..." $'\n'
-pip install mako &> /dev/null
+pip install mako 
 
 
 if [ ! -d $workdir ]; then
@@ -44,10 +44,11 @@ cd $workdir
 
 if [ ! -d "$andk/toolchains" ]; then
 	echo "Downloading android-ndk from google server ..." $'\n'
-	curl https://dl.google.com/android/repository/$andk-$ndkrev-linux.zip --output $andk-linux.zip &> /dev/null
+	curl https://dl.google.com/android/repository/$andk-$ndkrev-linux.zip --output $andk-linux.zip 
 	###
 	echo "Exracting android-ndk to a folder ..." $'\n'
 	unzip $andk-linux.zip -d $andk &> /dev/null
+	cp -a $andk-$ndkrev $andk
 	rm -rf $andk-linux.zip
 else
 	echo  "NDK $andk exists!" $'\n'
@@ -94,12 +95,12 @@ meson build-android-aarch64 --cross-file $workdir/mesa/android-aarch64 -Dshader-
        -Dbuildtype=debug -Dplatforms=android -Dplatform-sdk-version=31 -Dpower8=enabled  \
        -Dandroid-stub=true -Dgallium-drivers= -Dvulkan-drivers=panfrost -Dshader-cache=enabled \
 	   -Db_lto=true -Dcpp_rtti=false -Dvulkan-beta=true -Dshader-cache-default=true \
-       -Dvideo-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc -Dllvm=enabled &> $workdir/meson_log_mali.log
+       -Dvideo-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc -Dllvm=enabled 2>&1 | tee $workdir/meson_log_mali.log
 
 
 
 echo "Compiling build files ..." $'\n'
-ninja -C build-android-aarch64 &> $workdir/ninja_log_mali.log
+ninja -C build-android-aarch64 2>&1 | tee $workdir/ninja_log_mali.log
 
 
 
