@@ -7,7 +7,6 @@ workdir="$(pwd)/panfrostmali"
 magiskdir="$workdir/magisk_panfrost_mali"
 andk="android-ndk"
 ndkrev="r25b"
-set -e
 clear
 
 

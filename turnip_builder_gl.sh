@@ -7,7 +7,6 @@ workdir="$(pwd)/turnip_workdir_gl"
 magiskdir="$workdir/turnip_module"
 andk="android-ndk"
 ndkrev="r25b"
-set -e
 clear
 
 
