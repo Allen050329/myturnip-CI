@@ -5,7 +5,8 @@ nocolor='\033[0m'
 deps="meson ninja patchelf unzip git curl pip flex bison zip"
 workdir="$(pwd)/panfrostmali"
 magiskdir="$workdir/magisk_panfrost_mali"
-andk="android-ndk-r25b"
+andk="android-ndk"
+ndkrev="r25b"
 set -e
 clear
 
@@ -32,39 +33,51 @@ for deps_chk in $deps;
 echo "Installing python Mako dependency (if missing) ..." $'\n'
 pip install mako &> /dev/null
 
+
 if [ ! -d $workdir ]; then
 	echo "Creating and entering to work directory ..." $'\n'
-	mkdir -p $workdir && cd $workdir
+	mkdir -p $workdir
+else
+	echo "$workdir exists! Entering ..." $'\n'
 fi
 
-if [ ! -d "$andk" ]; then
+cd $workdir
+
+if [ ! -d "$andk/toolchains" ]; then
 	echo "Downloading android-ndk from google server ..." $'\n'
-	curl https://dl.google.com/android/repository/$andk-linux.zip --output $andk-linux.zip &> /dev/null
+	curl https://dl.google.com/android/repository/$andk-$ndkrev-linux.zip --output $andk-linux.zip &> /dev/null
 	###
 	echo "Exracting android-ndk to a folder ..." $'\n'
 	unzip $andk-linux.zip  &> /dev/null
+else
+	echo  "NDK $andk exists!" $'\n'
 fi
 
 if [ ! -d mesa ]; then
 	echo "Downloading mesa source ..." $'\n'
 	git clone https://gitlab.freedesktop.org/mesa/mesa.git
 	###
+else
+	echo "$workdir/mesa exists! Entering ..." $'\n'
 fi
 
 cd mesa
 
 
-
 echo "Creating meson cross file ..." $'\n'
 ndk="$workdir/$andk/toolchains/llvm/prebuilt/linux-x86_64/bin"
+LD_LIBRARY_PATH="$ndk/:$workdir/:$LD_LIBRARY_PATH"
+LOCAL_C_INCLUDES="$LD_LIBRARY_PATH"
+LOCAL_CXX_INCLUDES="$LD_LIBRARY_PATH"
+rm -rf ./build-android-aarch64 ./android-aarch64
 cat <<EOF >"android-aarch64"
 [binaries]
 ar = '$ndk/llvm-ar'
-c = ['ccache', '$ndk/aarch64-linux-android31-clang']
-cpp = ['ccache', '$ndk/aarch64-linux-android31-clang++', '-fno-exceptions', '-fno-unwind-tables', '-fno-asynchronous-unwind-tables', '-static-libstdc++']
+c = ['ccache', '$ndk/aarch64-linux-android31-clang', '-O3']
+cpp = ['ccache', '$ndk/aarch64-linux-android31-clang++', '-O3', '-fno-rtti', '-fno-exceptions', '-fno-unwind-tables', '-fno-asynchronous-unwind-tables', '-static-libstdc++']
 c_ld = 'lld'
 cpp_ld = 'lld'
-llvm-config = 'llvm-config'
+llvm-config = '$ndk/llvm-config'
 strip = '$ndk/aarch64-linux-android-strip'
 pkgconfig = ['env', 'PKG_CONFIG_LIBDIR=$workdir/$andk/pkgconfig', '/usr/bin/pkg-config']
 [host_machine]
@@ -77,15 +90,11 @@ EOF
 
 
 echo "Generating build files ..." $'\n'
-meson build-android-aarch64 --cross-file \
-        $workdir/mesa/android-aarch64  -Dgallium-drivers= \
-		-Dfreedreno-kgsl=true -Ddri3=enabled -Dvulkan-drivers=panfrost \
-        -Dvulkan-layers=device-select,overlay -Degl=enabled -Dgallium-va=enabled \
-        -Dgallium-nine=true -Dgallium-opencl=icd -Dbuildtype=release \
-        -Dplatform-sdk-version=31 -Dandroid-stub=true -Dshader-cache=enabled \
-        -Dshader-cache-default=true -Db_lto=true -Dplatforms=android \
-        -Dvideo-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc -Dshared-glapi=enabled \
-        -Dglx=disabled -Dgles2=enabled -Dgles1=enabled -Dllvm=enabled &> $workdir/meson_log_mali.log
+meson build-android-aarch64 --cross-file $workdir/mesa/android-aarch64 -Dshader-cache-max-size=6 \
+       -Dbuildtype=debug -Dplatforms=android -Dplatform-sdk-version=31 -Dpower8=enabled  \
+       -Dandroid-stub=true -Dgallium-drivers= -Dvulkan-drivers=panfrost -Dshader-cache=enabled \
+	   -Db_lto=true -Dcpp_rtti=false -Dvulkan-beta=true -Dshader-cache-default=true \
+       -Dvideo-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc -Dllvm=enabled &> $workdir/meson_log_mali.log
 
 
 
@@ -95,15 +104,14 @@ ninja -C build-android-aarch64 &> $workdir/ninja_log_mali.log
 
 
 #echo "Using patchelf to match soname ..."  $'\n'
-sleep 600
-cp $workdir/mesa/build-android-aarch64/src/freedreno/vulkan/libvulkan_freedreno.so $workdir
+cp $workdir/mesa/build-android-aarch64/src/panfrost/vulkan/libvulkan_panfrost.so $workdir
 cd $workdir
-#patchelf --set-soname vulkan.adreno.so libvulkan_freedreno.so
-#mv libvulkan_freedreno.so vulkan.adreno.so
+#patchelf --set-soname vulkan.adreno.so libvulkan_panfrost.so
+#mv libvulkan_panfrost.so vulkan.adreno.so
 
 
 
-if ! [ -a libvulkan_freedreno.so ]; then
+if ! [ -a libvulkan_panfrost.so ]; then
 	echo -e "$red Build failed! $nocolor" && exit 1
 fi
 
@@ -111,7 +119,9 @@ fi
 
 echo "Prepare magisk module structure ..." $'\n'
 p1="system/vendor/lib64/hw"
+p2="system/vendor/lib/hw"
 mkdir -p $magiskdir/$p1
+mkdir -p $magiskdir/$p2
 cd $magiskdir
 
 
@@ -166,13 +176,15 @@ EOF
 
 
 cat <<EOF >"customize.sh"
-set_perm \$MODPATH/$p1/libvulkan_freedreno.so 0 0 0644
+set_perm \$MODPATH/$p1/libvulkan_panfrost.so 0 0 0644
+set_perm \$MODPATH/$p2/libvulkan_panfrost.so 0 0 0644
 EOF
 
 
 
 echo "Copy necessary files from work directory ..." $'\n'
-cp $workdir/libvulkan_freedreno.so $magiskdir/$p1
+cp $workdir/libvulkan_panfrost.so $magiskdir/$p1
+cp $workdir/libvulkan_panfrost.so $magiskdir/$p2
 
 
 

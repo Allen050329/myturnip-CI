@@ -2,6 +2,8 @@ name: Build Mali Panfrost Debug
 
 on:
   workflow_dispatch:
+  schedule:
+    cron: "0 12 1,8,15,22 * * *"
 
 jobs:
   build_turnip:

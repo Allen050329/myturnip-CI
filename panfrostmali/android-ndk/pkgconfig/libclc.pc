@@ -1,0 +1,9 @@
+prefix=/home/allen623329/myturnip-CI/panfrostmali/android-ndk/deps
+includedir=${prefix}/libclc/include
+libexecdir=${prefix}/libclc/share/clc
+
+Name: libclc
+Description: Library requirements of the OpenCL C programming language
+Version: 0.2.0
+Cflags: -I${includedir}
+Libs: -L${libexecdir}

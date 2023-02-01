@@ -1,0 +1,14 @@
+prefix=/home/allen623329/myturnip-CI/panfrostmali/android-ndk/deps
+exec_prefix=${prefix}/libconfig
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libconfig
+Description: C Configuration File Library
+Version: 1.7.3
+URL: http://www.hyperrealm.com/main.php?s=libconfig
+Requires:
+Conflicts:
+Libs: -L${libdir} -lconfig
+Libs.private:  
+Cflags: -I${includedir}

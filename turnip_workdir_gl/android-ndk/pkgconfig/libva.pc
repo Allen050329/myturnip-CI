@@ -1,0 +1,13 @@
+prefix=/home/allen623329/myturnip-CI/turnip_workdir_gl/android-ndk/deps
+includedir=${prefix}/libva/include
+libdir=${prefix}/libva/lib
+
+libva_version=2.17.0
+va_api_version=1.17.0
+driverdir=/usr/lib/dri
+
+Name: va
+Description: Userspace Video Acceleration (VA) core interface
+Version: 1.17.0
+Libs: -L${libdir} -lva
+Cflags: -I${includedir}
