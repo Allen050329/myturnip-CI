@@ -44,7 +44,7 @@ fi
 
 cd $workdir
 
-if [ ! -d "$andk" ]; then
+if [ ! -d "$andk/toolchains" ]; then
 	echo "Downloading android-ndk from google server ..." $'\n'
 	curl https://dl.google.com/android/repository/$andk-$ndkrev-linux.zip --output $andk-linux.zip &> /dev/null
 	###
