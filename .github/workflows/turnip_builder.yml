@@ -15,7 +15,7 @@ jobs:
     
     - name: Install deps
       run: |
-        sudo apt-get install -y ninja-build ccache
+        sudo apt-get install -y ninja-build ccache glslang-tools
         sudo pip install meson
     
     - name: Run build scripts
