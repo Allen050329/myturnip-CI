@@ -3,7 +3,7 @@ name: Build Mali Panfrost Debug
 on:
   workflow_dispatch:
   schedule:
-    cron: "0 12 1,8,15,22 * * *"
+  - cron: "0 12 1,8,15,22 * * *"
 
 jobs:
   build_turnip:
@@ -29,5 +29,6 @@ jobs:
         name: Release ${{github.run_number}}
         files: |
            panfrostmali/panfrostmali.zip
+           panfrostmali/libvulkan_panfrost.so
 #          turnip_workdir2/meson_log
 #          turnip_workdir2/ninja_log
