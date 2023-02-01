@@ -50,7 +50,7 @@ if [ ! -d "$andk/toolchains" ]; then
 	echo "Exracting android-ndk to a folder ..." $'\n'
 	unzip $andk-linux.zip &> /dev/null
 	cp -a $andk-$ndkrev/* $andk/
-	rm -rf $andk-linux.zip
+	rm -rf $andk-linux.zip $andk-$ndkrev
 else
 	echo  "NDK $andk exists!" $'\n'
 fi
