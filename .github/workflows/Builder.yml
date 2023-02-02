@@ -23,20 +23,21 @@ jobs:
     - name: Run build scripts
       run: |
         bash ./turnip_builder.sh
-        bash ./turnip_builder_gl.sh 
+        bash ./turnip_builder_gl.sh
+        bash ./mali_turnip.sh 
       
     - name: Release Mesa Turnip Latest
       uses: softprops/action-gh-release@v1
       with:
-        body: Turnip magisk module Latest
+        body: Freedreno, Turnip and Mali Latest
         tag_name: workflow_${{github.run_number}}
         name: Release ${{github.run_number}}
         files: |
            turnip_workdir/turnipVK.zip
-           turnip_workdir/vulkan.adreno.so
            turnip_workdir_gl/FreedrenoGL.zip
+           panfrostmali/panfrostmali.zip
+           turnip_workdir/vulkan.adreno.so
            turnip_workdir_gl/libEGL_adreno.so
            turnip_workdir_gl/libGLESv1_CM_adreno.so
            turnip_workdir_gl/libGLESv2_adreno.so
-#          turnip_workdir/meson_log
-#          turnip_workdir/ninja_log
+           panfrostmali/libvulkan_panfrost.so
