@@ -1,5 +1,7 @@
 name: Build Mali Panfrost Debug 
 
+permissions: write-all
+
 on:
   workflow_dispatch:
   schedule:
