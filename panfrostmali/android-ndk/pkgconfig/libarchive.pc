@@ -1,4 +1,4 @@
-prefix=/home/runner/work/myturnip-CI/myturnip-CI/panfrostmali/android-ndk/deps
+prefix=../deps
 exec_prefix=${prefix}/libarchive
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include

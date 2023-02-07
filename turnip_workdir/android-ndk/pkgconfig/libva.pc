@@ -1,4 +1,4 @@
-prefix=/home/runner/work/myturnip-CI/myturnip-CI/turnip_workdir/android-ndk/deps
+prefix=../deps
 includedir=${prefix}/libva/include
 libdir=${prefix}/libva/lib
 

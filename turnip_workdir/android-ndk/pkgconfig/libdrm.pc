@@ -1,6 +1,6 @@
-prefix=/home/runner/work/myturnip-CI/myturnip-CI/turnip_workdir/android-ndk/deps
-includedir=${prefix}/libdrm/include
-libdir=${prefix}/libdrm/lib
+prefix=../deps/libdrm
+includedir=${prefix}/include
+libdir=${prefix}/lib
 
 Name: libdrm
 Description: Userspace interface to kernel DRM services

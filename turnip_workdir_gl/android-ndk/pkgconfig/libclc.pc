@@ -1,4 +1,4 @@
-prefix=/home/runner/work/myturnip-CI/myturnip-CI/turnip_workdir_gl/android-ndk/deps
+prefix=../deps
 includedir=${prefix}/libclc/include
 libexecdir=${prefix}/libclc/share/clc
 
