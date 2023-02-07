@@ -1,0 +1,25 @@
+name: Build All
+
+permissions: write-all
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build_turnip:
+
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install deps
+      run: |
+        sudo apt-get install -y ninja-build ccache glslang-tools libdrm-dev libdrm2
+        sudo pip install meson
+    
+    - name: Run build scripts
+      run: |
+        bash ./turnip_builder.sh
+        bash ./turnip_builder_gl.sh
+        bash ./mali_turnip.sh 
