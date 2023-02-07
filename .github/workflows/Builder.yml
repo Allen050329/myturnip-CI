@@ -25,7 +25,8 @@ jobs:
       run: |
         bash ./turnip_builder.sh
         bash ./turnip_builder_gl.sh
-        bash ./mali_turnip.sh 
+        bash ./mali_turnip.sh
+        bash ./FreedrenoFull.sh 
       
     - name: Release Mesa Turnip Latest
       uses: softprops/action-gh-release@v1

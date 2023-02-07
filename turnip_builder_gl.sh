@@ -102,12 +102,12 @@ meson build-android-aarch64 --cross-file $workdir/mesa/android-aarch64 -Dgallium
        -Dplatform-sdk-version=31 -Dandroid-stub=true -Dshader-cache=enabled -Dplatforms=android -Dvulkan-drivers= \
        -Dshader-cache-default=true -Db_lto=true -Dcpp_rtti=false -Dvideo-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc \
 	   -Dshared-glapi=enabled -Dgles2=enabled -Dgles1=enabled -Dllvm=enabled -Ddraw-use-llvm=false \
-	   -Ddri-search-path=$workdir/mesa/src/egl/drivers/dri2 2>&1 | tee $workdir/meson_log_dreno.log
+	   -Ddri-search-path=$workdir/mesa/src/egl/drivers/dri2 2>&1 | tee $workdir/meson_log_dreno_gl.log
 
 
 
 echo "Compiling build files ..." $'\n'
-ninja -C build-android-aarch64 2>&1 | tee $workdir/ninja_log_dreno.log
+ninja -C build-android-aarch64 2>&1 | tee $workdir/ninja_log_dreno_gl.log
 
 echo "Using patchelf to match soname ..."  $'\n'
 cp $workdir/mesa/build-android-aarch64/src/egl/libEGL.so $workdir
@@ -135,6 +135,7 @@ fi
 
 echo "Prepare magisk module structure ..." $'\n'
 p1="system/vendor/lib64/egl"
+p2="system/vendor/lib/egl"
 mkdir -p $magiskdir/$p1
 cd $magiskdir
 
@@ -193,6 +194,9 @@ cat <<EOF >"customize.sh"
 set_perm \$MODPATH/$p1/libEGL_adreno.so 0 0 0644
 set_perm \$MODPATH/$p1/libGLESv1_CM_adreno.so 0 0 0644
 set_perm \$MODPATH/$p1/libGLESv2_adreno.so 0 0 0644
+set_perm \$MODPATH/$p2/libEGL_adreno.so 0 0 0644
+set_perm \$MODPATH/$p2/libGLESv1_CM_adreno.so 0 0 0644
+set_perm \$MODPATH/$p2/libGLESv2_adreno.so 0 0 0644
 EOF
 
 
@@ -201,7 +205,7 @@ echo "Copy necessary files from work directory ..." $'\n'
 cp $workdir/libEGL_adreno.so $magiskdir/$p1
 cp $workdir/libGLESv1_CM_adreno.so $magiskdir/$p1
 cp $workdir/libGLESv2_adreno.so $magiskdir/$p1
-
+cp -a $magiskdir/$p1 $magiskdir/$p2
 
 
 echo "Packing files in to magisk module ..." $'\n'
