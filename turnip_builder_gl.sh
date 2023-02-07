@@ -94,7 +94,7 @@ EOF
 
 echo "Generating build files ..." $'\n'
 meson build-android-aarch64 --cross-file $workdir/mesa/android-aarch64 -Dgallium-drivers=freedreno -Degl=enabled \
-       -Dpower8=enabled -Dshader-cache-max-size=6 -Dbuildtype=release -Dplatforms=android -Dopengl=true \
+       -Dpower8=enabled -Dshader-cache-max-size=36 -Dbuildtype=release -Dplatforms=android -Dopengl=true \
        -Dplatform-sdk-version=31 -Dandroid-stub=true -Dshader-cache=enabled -Dplatforms=android -Dvulkan-drivers= \
        -Dshader-cache-default=true -Db_lto=true -Dcpp_rtti=false -Dvideo-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc \
 	   -Dshared-glapi=enabled -Dgles2=enabled -Dgles1=enabled -Dllvm=enabled -Ddraw-use-llvm=false \

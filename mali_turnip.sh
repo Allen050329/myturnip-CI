@@ -91,7 +91,7 @@ EOF
 
 
 echo "Generating build files ..." $'\n'
-meson build-android-aarch64 --cross-file $workdir/mesa/android-aarch64 -Dshader-cache-max-size=6 \
+meson build-android-aarch64 --cross-file $workdir/mesa/android-aarch64 -Dshader-cache-max-size=36 \
        -Dbuildtype=debug -Dplatforms=android -Dplatform-sdk-version=31 -Dpower8=enabled  \
        -Dandroid-stub=true -Dgallium-drivers= -Dvulkan-drivers=panfrost -Dshader-cache=enabled \
 	   -Db_lto=true -Dcpp_rtti=false -Dvulkan-beta=true -Dshader-cache-default=true \
