@@ -1,5 +1,5 @@
-prefix=~/myturnip-CI/deps
-includedir=${prefix}/libclc/include
+prefix=/opt/deps
+includedir=${prefix}/libclc/include/clc
 libexecdir=${prefix}/libclc/share/clc
 
 Name: libclc

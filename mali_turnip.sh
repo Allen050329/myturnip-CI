@@ -3,7 +3,8 @@ green='\033[0;32m'
 red='\033[0;31m'
 nocolor='\033[0m'
 deps="meson ninja patchelf unzip git curl pip flex bison zip"
-workdir="$(pwd)/panfrostmali"
+depdir="$(pwd)/depend"
+workdir="$(pwd)/workdir"
 magiskdir="$workdir/magisk_panfrost_mali"
 andk="android-ndk"
 ndkrev="r25b"
@@ -48,7 +49,7 @@ if [ ! -d "$andk/toolchains" ]; then
 	###
 	echo "Exracting android-ndk to a folder ..." $'\n'
 	unzip $andk-linux.zip &> /dev/null
-	cp -a $andk-$ndkrev/* $andk/
+	cp -a $andk-$ndkrev $andk
 	rm -rf $andk-linux.zip $andk-$ndkrev
 else
 	echo  "NDK $andk exists!" $'\n'
@@ -64,28 +65,30 @@ fi
 
 cd mesa
 
+ndk="$workdir/$andk/toolchains/llvm/prebuilt/linux-x86_64/bin"
+INC_DIR="$depdir/deps"
+LD_LIBRARY_PATH="$ndk:$depdir/deps:/usr/include:$LIBRARY_PATH:$LD_LIBRARY_PATH"
+LIBRARY_PATH="$LD_LIBRARY_PATH"
+LOCAL_C_INCLUDES="$LIBRARY_PATH"
+LOCAL_CXX_INCLUDES="$LIBRARY_PATH"
+CMAKE_CXX_FLAGS="-I$INC_DIR"
+DEPS="$depdir/deps/libdrm/xf86drm.h"
+rm -rf ./build-android-aarch64 ./android-aarch64
+
 
 echo "Creating meson cross file ..." $'\n'
-ndk="$workdir/$andk/toolchains/llvm/prebuilt/linux-x86_64/bin"
-LD_LIBRARY_PATH="$ndk:$workdir:$LD_LIBRARY_PATH:/usr/include:"
-LOCAL_C_INCLUDES="$LD_LIBRARY_PATH"
-LOCAL_CXX_INCLUDES="$LD_LIBRARY_PATH"
-CFLAGS="$CFLAGS -I$workdir/$andk/deps/*/include"
-CXXFLAGS="$CFLAGS"
-EXTRA_HEADERS="$EXTRA_HEADERS xf86drm.h"
-rm -rf ./build-android-aarch64 ./android-aarch64
 cat <<EOF >"android-aarch64"
 [binaries]
 ar = '$ndk/llvm-ar'
-c = ['ccache', '$ndk/aarch64-linux-android31-clang', '-O3']
-cpp = ['ccache', '$ndk/aarch64-linux-android31-clang++', '-O3', '-fno-rtti', '-fno-exceptions', '-fno-unwind-tables', '-fno-asynchronous-unwind-tables', '-static-libstdc++']
-c_ld = 'lld'
-cpp_ld = 'lld'
+c = ['ccache', '$ndk/aarch64-linux-android33-clang', '-O3']
+cpp = ['ccache', '$ndk/aarch64-linux-android33-clang++', '-O3', '-fno-rtti', '-fno-exceptions', '-fno-unwind-tables', '-fno-asynchronous-unwind-tables', '-static-libstdc++']
+c_ld = '$ndk/ld.lld'
+cpp_ld = '$ndk/ld.lld'
 llvm-config = '$ndk/llvm-config'
 strip = '$ndk/aarch64-linux-android-strip'
-pkgconfig = ['env', 'PKG_CONFIG_LIBDIR=$workdir/$andk/pkgconfig', '/usr/bin/pkg-config']
+pkgconfig = ['env', 'PKG_CONFIG_LIBDIR=$depdir/pkgconfig', '/usr/bin/pkg-config']
 [host_machine]
-system = 'linux'
+system = 'android'
 cpu_family = 'aarch64'
 cpu = 'armv8'
 endian = 'little'

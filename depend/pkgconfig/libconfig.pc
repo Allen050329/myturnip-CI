@@ -1,4 +1,4 @@
-prefix=~/myturnip-CI/deps
+prefix=/opt/deps
 exec_prefix=${prefix}/libconfig
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include

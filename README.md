@@ -8,7 +8,7 @@ In this repository, you will find a shell script to build freedreno/turnip drive
 ### How to build locally?
 - Clone this repo;
 - You must be in a linux environment;
-- Edit .pc files to match path
+- Move ./depend/deps to /opt/deps
 - Open terminal and navigate to the directory of script and run this command ```bash turnip_builder.sh```
 - You can edit **turnip_builder.sh** to add a break or skip some steps, this is also a good way when you want to try something that is not merged in to mesa repository.
 
@@ -16,7 +16,8 @@ In this repository, you will find a shell script to build freedreno/turnip drive
 ###Allen050329 Changelog
 -Change auto build time to the 1st, 8th, 15th and 22nd of each month
 -Add drm stuff back in for Open GL drivers
--Merge actions to build all together (2023/2/2)
+-Merge actions to build all together (2023/02/02)
+-Save some disk space by reusing files (2023/02/07)
 
 Notes
 use command (for vk on Adreno):

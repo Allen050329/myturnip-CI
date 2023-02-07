@@ -19,6 +19,7 @@ jobs:
       run: |
         sudo apt-get install -y ninja-build ccache glslang-tools libdrm-dev libdrm2
         sudo pip install meson
+        cp -a depend/deps /opt/deps
     
     - name: Run build scripts
       run: |
@@ -33,11 +34,11 @@ jobs:
         tag_name: workflow_${{github.run_number}}
         name: Release ${{github.run_number}}
         files: |
-           turnip_workdir/turnipVK.zip
-           turnip_workdir_gl/FreedrenoGL.zip
-           panfrostmali/panfrostmali.zip
-           turnip_workdir/vulkan.adreno.so
-           turnip_workdir_gl/libEGL_adreno.so
-           turnip_workdir_gl/libGLESv1_CM_adreno.so
-           turnip_workdir_gl/libGLESv2_adreno.so
-           panfrostmali/libvulkan_panfrost.so
+           workdir/turnipVK.zip
+           workdir/FreedrenoGL.zip
+           workdir/panfrostmali.zip
+           workdir/vulkan.adreno.so
+           workdir/libEGL_adreno.so
+           workdir/libGLESv1_CM_adreno.so
+           workdir/libGLESv2_adreno.so
+           workdir/libvulkan_panfrost.so

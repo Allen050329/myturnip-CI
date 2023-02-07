@@ -1,4 +1,4 @@
-prefix=~/myturnip-CI/deps/libdrm
+prefix=/opt/deps/libdrm
 includedir=${prefix}/include
 libdir=${prefix}/lib
 

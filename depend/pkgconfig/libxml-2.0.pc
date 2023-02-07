@@ -1,7 +1,7 @@
-prefix=~/myturnip-CI/deps
+prefix=/opt/deps
 exec_prefix=${prefix}/libxml2
 libdir=${exec_prefix}/lib
-includedir=${prefix}/include
+includedir=${prefix}/include/libxml2/libxml
 modules=1
 
 Name: libXML

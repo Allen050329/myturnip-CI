@@ -1,6 +1,5 @@
-turnip_workdir
-turnip_workdir_gl
-panfrostmali
+workdir
+!workdir/android-ndk/pkgconfig
 meson_feature
 help
 .vscode
