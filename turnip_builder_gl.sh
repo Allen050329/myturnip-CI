@@ -5,7 +5,7 @@ nocolor='\033[0m'
 deps="meson ninja patchelf unzip curl pip flex bison zip"
 depdir="$(pwd)/depend"
 workdir="$(pwd)/workdir"
-magiskdir="$workdir/turnip_module"
+magiskdir="$workdir/turnip_module_gl"
 andk="android-ndk"
 ndkrev="r25b"
 clear
