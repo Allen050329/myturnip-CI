@@ -19,7 +19,7 @@ jobs:
       run: |
         sudo apt-get install -y ninja-build ccache glslang-tools libdrm-dev libdrm2
         sudo pip install meson
-        cp -a depend/deps /opt/deps
+        sudo cp -a depend/deps /opt/deps
     
     - name: Run build scripts
       run: |
