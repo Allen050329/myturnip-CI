@@ -12,6 +12,9 @@ p2="system/vendor/lib/egl"
 p3="system/vendor/lib64/hw"
 p4="system/vendor/lib/hw"
 mkdir -p $magiskdir/$p1
+mkdir -p $magiskdir/$p3
+mkdir -p $magiskdir/$p2
+mkdir -p $magiskdir/$p4
 cd $magiskdir
 
 
