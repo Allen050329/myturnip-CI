@@ -67,7 +67,7 @@ cd mesa
 
 echo "Creating meson cross file ..." $'\n'
 ndk="$workdir/$andk/toolchains/llvm/prebuilt/linux-x86_64/bin"
-LD_LIBRARY_PATH="$ndk/:$workdir/:$LD_LIBRARY_PATH"
+LD_LIBRARY_PATH="$ndk/:$workdir/:$LD_LIBRARY_PATH:/usr/include/"
 LOCAL_C_INCLUDES="$LD_LIBRARY_PATH"
 LOCAL_CXX_INCLUDES="$LD_LIBRARY_PATH"
 rm -rf ./build-android-aarch64 ./android-aarch64
