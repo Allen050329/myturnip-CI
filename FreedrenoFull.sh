@@ -83,12 +83,14 @@ EOF
 
 echo "Copy necessary files from work directory ..." $'\n'
 cp $workdir/vulkan.adreno.so $magiskdir/$p3
-cp -a $magiskdir/$p3 $magiskdir/$p4
+cp $workdir/vulkan.adreno.so $magiskdir/$p4
 
 cp $workdir/libEGL_adreno.so $magiskdir/$p1
 cp $workdir/libGLESv1_CM_adreno.so $magiskdir/$p1
 cp $workdir/libGLESv2_adreno.so $magiskdir/$p1
-cp -a $magiskdir/$p1 $magiskdir/$p2
+cp $workdir/libEGL_adreno.so $magiskdir/$p2
+cp $workdir/libGLESv1_CM_adreno.so $magiskdir/$p2
+cp $workdir/libGLESv2_adreno.so $magiskdir/$p2
 
 
 echo "Packing files in to magisk module ..." $'\n'
