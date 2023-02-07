@@ -82,7 +82,7 @@ c_ld = 'lld'
 cpp_ld = 'lld'
 llvm-config = '$ndk/llvm-config'
 strip = '$ndk/aarch64-linux-android-strip'
-pkgconfig = ['env', 'PKG_CONFIG_LIBDIR=$workdir/$andk/pkgconfig', '/usr/bin/pkg-config', '$LD_LIBRARY_PATH']
+pkgconfig = ['env', 'PKG_CONFIG_LIBDIR=$workdir/$andk/', '/usr/bin/pkg-config']
 [host_machine]
 system = 'android'
 cpu_family = 'aarch64'
